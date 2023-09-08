@@ -1,3 +1,7 @@
+![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)
+![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)
+![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)
+
 # Data flow from ENCODE - dfENCODE
 
 Project created to interrogate CHIP-seq data (bigWig) deposited in the [ENCODE](https://www.encodeproject.org/).
