@@ -183,7 +183,7 @@ def start_analysis(
     window: int,
     output: str,
     workers: int,
-    experiments_to_integrate: str = None,
+    heatmap_mode: str = None,
 ) -> None:
     bigwig_files = glob(join(encode_data_directory, "data", "*.bigWig"))
     if not bigwig_files:
