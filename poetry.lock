@@ -2494,6 +2494,20 @@ files = [
 ]
 
 [[package]]
+name = "wheel"
+version = "0.41.2"
+description = "A built-package format for Python"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "wheel-0.41.2-py3-none-any.whl", hash = "sha256:75909db2664838d015e3d9139004ee16711748a52c8f336b52882266540215d8"},
+    {file = "wheel-0.41.2.tar.gz", hash = "sha256:0c5ac5ff2afb79ac23ab82bab027a0be7b5dbcf2e54dc50efe4bf507de1f7985"},
+]
+
+[package.extras]
+test = ["pytest (>=6.0.0)", "setuptools (>=65)"]
+
+[[package]]
 name = "wrapt"
 version = "1.15.0"
 description = "Module for decorators, wrappers and monkey patching."
@@ -2580,4 +2594,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "a94774db2f70fee5c8e32934fe1128127c206dab9a4fae3b5fcacf655c1b8bcf"
+content-hash = "260b9e7575f353a701c652b10e6fa4fd2edcfbb1e0a175aadf4106c7b1f37580"

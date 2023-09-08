@@ -9,6 +9,8 @@ readme = "README.md"
 python = "^3.10"
 pandas = "^2.1.0"
 prefect = "^2.13.0"
+setuptools = "^68.2.0"
+wheel = "^0.41.2"
 
 
 [tool.poetry.group.dev.dependencies]
