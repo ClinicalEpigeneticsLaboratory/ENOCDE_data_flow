@@ -19,7 +19,7 @@ Then to integrate these datasets:
         start_integration(exmperiments_to_integrate=["ENCSR073ORI", "ENCSR829ZLX", "ENCSR641ZFV"], output="example")
 
 This code will create `example/` directory and will download selected files to `example/data` sub-directory.
-Please note that user may also specified `signal_type (default="signal p-value")` as well as `genome_assembly (default="GRCh38")`.
+Please note that user may also specify `signal_type (default="signal p-value")` as well as `genome_assembly (default="GRCh38")`.
 
 To create heatmaps and bigWig summary file for specified BED file(s) and downloaded experiment(s):
 
