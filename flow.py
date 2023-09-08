@@ -180,10 +180,10 @@ def plot_PCA(summary_matrix: str, output: str) -> None:
 def start_analysis(
     bed_files: Union[list, tuple],
     encode_data_directory: str,
-    heatmap_mode: str,
     window: int,
     output: str,
     workers: int,
+    heatmap_mode: str = None,
 ) -> None:
     bigwig_files = glob(join(encode_data_directory, "data", "*.bigWig"))
     if not bigwig_files:
