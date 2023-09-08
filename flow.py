@@ -156,10 +156,13 @@ def compute_matrix(
 
 
 @task(log_prints=True)
-def plot_heatmap(matrix: str, output: str, bed_files: Union[list, tuple]) -> None:
+def plot_heatmap(matrix: str, output: str, bed_files: Union[list, tuple], mode: str) -> None:
     labels = [Path(file).name.split(".")[0] for file in bed_files]
     labels = " ".join(labels)
-    command = f"plotHeatmap -m {matrix} --regionsLabel {labels} --refPointLabel CpG --dpi 500 --perGroup -o {output}"
+    command = f"plotHeatmap -m {matrix} --regionsLabel {labels} --refPointLabel CpG --dpi 500 -o {output}"
+
+    if mode == "group":
+        command += " --perGroup"
 
     print(f"Running: {command}")
     call(command, shell=True)
@@ -177,6 +180,7 @@ def plot_PCA(summary_matrix: str, output: str) -> None:
 def start_analysis(
     bed_files: Union[list, tuple],
     encode_data_directory: str,
+    heatmap_mode: str,
     window: int,
     output: str,
     workers: int,
@@ -205,6 +209,6 @@ def start_analysis(
     sample_sheet = pd.read_csv(sample_sheet)
 
     compute_matrix(sample_sheet, bigwig_files, bed_files, window, output, workers)
-    plot_heatmap(join(output, "matrix"), join(output, "heatmap.png"), bed_files)
+    plot_heatmap(join(output, "matrix"), join(output, "heatmap.png"), bed_files, heatmap_mode)
     build_summary_matrix(bigwig_files, bed_files, output, workers)
     plot_PCA(join(output, "summary.npz"), output)

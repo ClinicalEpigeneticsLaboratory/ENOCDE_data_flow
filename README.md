@@ -26,3 +26,4 @@ To create heatmaps and bigWig summary file for specified BED file(s) and downloa
         start_analysis(encode_data_directory="example", output="results/", bed_files=["BED1.bed", "BED2.bed"], window=5000, workers=10)
 
 This code will create `results/` directory with elements generated using [deepTools](https://deeptools.readthedocs.io/en/develop/) based on specified `BED files` and `bigWig files` integrated in previous step.
+**INFO** add `plot_heatmap="group"` argument to create grouped heatmap.
