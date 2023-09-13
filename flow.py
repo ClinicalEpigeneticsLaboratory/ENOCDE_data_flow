@@ -169,8 +169,12 @@ def plot_heatmap(matrix: str, output: str, bed_files: Union[list, tuple], mode: 
 
 
 @task(log_prints=True)
-def plot_PCA(summary_matrix: str, output: str) -> None:
-    command = f"plotPCA -in {summary_matrix} -o {join(output, 'pca.png')}"
+def plot_PCA(sample_sheet: pd.DataFrame, summary_matrix: str, output: str, bigwig_files: Union[list, tuple]) -> None:
+    files_ids = [Path(file).name.split(".")[0] for file in bigwig_files]
+    labels = sample_sheet[sample_sheet.File.isin(files_ids)]["Term_name"].tolist()
+    labels = " ".join(labels)
+
+    command = f"plotPCA -in {summary_matrix} --labels {labels} -o {join(output, 'pca.png')}"
 
     print(f"Running: {command}")
     call(command, shell=True)
@@ -211,4 +215,4 @@ def start_analysis(
     compute_matrix(sample_sheet, bigwig_files, bed_files, window, output, workers)
     plot_heatmap(join(output, "matrix"), join(output, "heatmap.png"), bed_files, heatmap_mode)
     build_summary_matrix(bigwig_files, bed_files, output, workers)
-    plot_PCA(join(output, "summary.npz"), output)
+    plot_PCA(sample_sheet,join(output, "summary.npz"), output)
