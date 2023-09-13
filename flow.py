@@ -215,4 +215,4 @@ def start_analysis(
     compute_matrix(sample_sheet, bigwig_files, bed_files, window, output, workers)
     plot_heatmap(join(output, "matrix"), join(output, "heatmap.png"), bed_files, heatmap_mode)
     build_summary_matrix(bigwig_files, bed_files, output, workers)
-    plot_PCA(sample_sheet,join(output, "summary.npz"), output)
+    plot_PCA(sample_sheet,join(output, "summary.npz"), output, bigwig_files)
