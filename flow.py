@@ -136,7 +136,7 @@ def compute_matrix(
     workers: int,
 ) -> None:
     files_ids = [Path(file).name.split(".")[0] for file in bigwig_files]
-    labels = sample_sheet[sample_sheet.File.isin(files_ids)]["Target"].tolist()
+    labels = sample_sheet[sample_sheet.File.isin(files_ids)]["Term_name"].tolist()
     labels = " ".join(labels)
 
     output = join(output, "matrix")
