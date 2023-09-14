@@ -12,6 +12,7 @@ prefect = "^2.13.0"
 setuptools = "^68.2.0"
 wheel = "^0.41.2"
 deeptools = "^3.5.3"
+ipython = "^8.15.0"
 
 
 [tool.poetry.group.dev.dependencies]
