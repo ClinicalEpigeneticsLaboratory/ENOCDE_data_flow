@@ -3,7 +3,6 @@
 ![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)
 
 # Data flow from ENCODE - dfENCODE
-
 Project created to interrogate CHIP-seq data (bigWig) deposited in the [ENCODE](https://www.encodeproject.org/).
 
 ### To start 
@@ -11,7 +10,7 @@ Project created to interrogate CHIP-seq data (bigWig) deposited in the [ENCODE](
         pip install poetry
         poetry install
 
-### To run
+### To run flows
 Firstly, user has to define experiments of interest for example: **ENCSR073ORI**, **ENCSR829ZLX**, **ENCSR641ZFV**.   
 Then to integrate these datasets:
 
@@ -26,4 +25,17 @@ To create heatmaps and bigWig summary file for specified BED file(s) and downloa
         start_analysis(encode_data_directory="example", output="results/", bed_files=["BED1.bed", "BED2.bed"], window=5000, workers=10)
 
 This code will create `results/` directory with elements generated using [deepTools](https://deeptools.readthedocs.io/en/develop/) based on specified `BED files` and `bigWig files` integrated in previous step.
-**INFO** add `plot_heatmap="group"` argument to create grouped heatmap.
+
+### To run task as a flow
+To run single task as a separate flow:
+
+        flow(<task_name>.fn)(<task_arguments>)
+
+for example:
+
+        flow(plot_heatmap.fn)(matrix=path_to_matrix, output_path=path_to_file, bed_files=["BED1.bed", "BED2.bed"])
+
+### To run single task with additional arguments for deeptools CLI
+        
+        extra_arguments = {"--perGroup": "", "--colorMap": "RdBu"}
+        flow(plot_heatmap.fn)(matrix=path_to_matrix, output_path=path_to_file, bed_files=["BED1.bed", "BED2.bed"], additional_kwargs=extra_arguments)

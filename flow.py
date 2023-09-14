@@ -12,7 +12,7 @@ import requests
 from prefect import task, flow
 
 from src.exceptions import WrongGenomeAssembly, WrongSignalType, DataNotFound
-from src.utils import show_progress
+from src.utils import show_progress, parse_kwargs
 
 
 @task
@@ -134,6 +134,7 @@ def compute_matrix(
     window: int,
     output: str,
     workers: int,
+    additional_kwargs: dict = None
 ) -> None:
     files_ids = [Path(file).name.split(".")[0] for file in bigwig_files]
     labels = sample_sheet[sample_sheet.File.isin(files_ids)]["Term_name"].tolist()
@@ -151,30 +152,38 @@ def compute_matrix(
     bed_files = " ".join(bed_files)
     command = f"computeMatrix reference-point -p {workers} -S {bigwig_files} -R {bed_files} -a {window} -b {window} -o {output} --samplesLabel {labels}"
 
+    if additional_kwargs:
+        additional_kwargs = parse_kwargs(additional_kwargs)
+        command += additional_kwargs
+
     print(f"Running: {command}")
     call(command, shell=True)
 
 
 @task(log_prints=True)
-def plot_heatmap(matrix: str, output: str, bed_files: Union[list, tuple], mode: str) -> None:
+def plot_heatmap(matrix: str, output: str, bed_files: Union[list, tuple], additional_kwargs: dict = None) -> None:
     labels = [Path(file).name.split(".")[0] for file in bed_files]
     labels = " ".join(labels)
     command = f"plotHeatmap -m {matrix} --regionsLabel {labels} --refPointLabel CpG --dpi 500 -o {output}"
 
-    if mode == "group":
-        command += " --perGroup"
+    if additional_kwargs:
+        additional_kwargs = parse_kwargs(additional_kwargs)
+        command += additional_kwargs
 
     print(f"Running: {command}")
     call(command, shell=True)
 
 
 @task(log_prints=True)
-def plot_PCA(sample_sheet: pd.DataFrame, summary_matrix: str, output: str, bigwig_files: Union[list, tuple]) -> None:
+def plot_PCA(sample_sheet: pd.DataFrame, summary_matrix: str, output: str, bigwig_files: Union[list, tuple], additional_kwargs: dict = None) -> None:
     files_ids = [Path(file).name.split(".")[0] for file in bigwig_files]
     labels = sample_sheet[sample_sheet.File.isin(files_ids)]["Term_name"].tolist()
     labels = " ".join(labels)
 
     command = f"plotPCA -in {summary_matrix} --labels {labels} -o {join(output, 'pca.png')}"
+    if additional_kwargs:
+        additional_kwargs = parse_kwargs(additional_kwargs)
+        command += additional_kwargs
 
     print(f"Running: {command}")
     call(command, shell=True)
@@ -215,4 +224,4 @@ def start_analysis(
     compute_matrix(sample_sheet, bigwig_files, bed_files, window, output, workers)
     plot_heatmap(join(output, "matrix"), join(output, "heatmap.png"), bed_files, heatmap_mode)
     build_summary_matrix(bigwig_files, bed_files, output, workers)
-    plot_PCA(sample_sheet,join(output, "summary.npz"), output, bigwig_files)
+    plot_PCA(sample_sheet, join(output, "summary.npz"), output, bigwig_files)
