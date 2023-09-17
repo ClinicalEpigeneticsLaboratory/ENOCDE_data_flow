@@ -1,10 +1,15 @@
 class WrongGenomeAssembly(Exception):
-    pass
+    def __init__(self, msg: str):
+        self.msg = msg
+        super().__init__(self.msg)
 
 
 class WrongSignalType(Exception):
-    pass
-
+    def __init__(self, msg: str):
+        self.msg = msg
+        super().__init__(self.msg)
 
 class DataNotFound(Exception):
-    pass
+    def __init__(self, msg: str):
+        self.msg = msg
+        super().__init__(self.msg)

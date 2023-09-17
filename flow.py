@@ -15,7 +15,7 @@ from src.exceptions import WrongGenomeAssembly, WrongSignalType, DataNotFound
 from src.utils import show_progress, parse_kwargs
 
 
-@task
+@task(log_prints=True)
 def extract_files_from_experiments(
     experiments: Union[list, tuple], signal_type: str, genome_assembly: str
 ) -> pd.DataFrame:
@@ -58,11 +58,12 @@ def extract_files_from_experiments(
             }
 
             extracted_data.append(record)
+    
+    extracted_data = pd.DataFrame(extracted_data)
+    return extracted_data
 
-    return pd.DataFrame(extracted_data)
 
-
-@task(retries=3, retry_delay_seconds=10, log_prints=True)
+@task(retries=5, retry_delay_seconds=10, log_prints=True)
 def download_bigwig(file: str, link: str, output: str) -> None:
     print(f"Downloadig file: {file} to {output} directory.")
 
@@ -84,12 +85,10 @@ def start_integration(
     genome_assembly: str = "GRCh38",
 ) -> None:
     if signal_type not in ["signal p-value", "fold change over control"]:
-        print("Signal type should be 'signal p-value' or 'fold change over control'!")
-        raise WrongSignalType
+        raise WrongSignalType("Signal type should be 'signal p-value' or 'fold change over control' !")
 
     if genome_assembly not in ["GRCh38", "hg19"]:
-        print("Genome_assembly should be 'GRCh38' or 'hg19'!")
-        raise WrongGenomeAssembly
+        raise WrongGenomeAssembly("Genome_assembly should be 'GRCh38' or 'hg19'!")
 
     if not exists(output):
         makedirs(join(output, "data"), exist_ok=True)
@@ -98,6 +97,7 @@ def start_integration(
     sample_sheet = extract_files_from_experiments(
         exmperiments_to_integrate, signal_type, genome_assembly
     )
+    
     sample_sheet.to_csv(join(output, "sample_sheet.csv"), index=False)
 
     print(f"Sample sheet saved in {output} directory.")
@@ -206,8 +206,7 @@ def start_analysis(
 
     sample_sheet = join(encode_data_directory, "sample_sheet.csv")
     if not exists:
-        print(f"Sample-sheet not found in {encode_data_directory}!")
-        raise DataNotFound
+        raise DataNotFound(f"Sample-sheet not found in {encode_data_directory}!")
 
     if not exists(output):
         print(f"Created {output} directory.")
